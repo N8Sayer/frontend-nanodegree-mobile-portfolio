@@ -8,20 +8,11 @@
     <title>Nate Sargent: Portfolio</title>
 
     <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" media="none" onload="this.media='all'">
-    <link href="css/style.css" rel="stylesheet" media="none" onload="this.media='all'">
-    <style>
-      @media print {
-        * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; }
-        a, a:visited { color: #444 !important; text-decoration: underline; }
-        a[href]:after { content: " (" attr(href) ")"; }
-        tr, img { page-break-inside: avoid; }
-        img { max-width: 100% !important; }
-        @page { margin: 0.5cm; }
-        p, h2, h3 { orphans: 3; widows: 3; }
-        h2, h3{ page-break-after: avoid; }
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="preload" as="style" onload="this.rel='styleshet'">
+    <noscript><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"></noscript>
+    <link href="css/style.css" rel="preload" media="none" as="style" onload="this.rel='styleshet'">
+    <noscript><link href="css/style.css" rel="stylesheet"></noscript>
+    <link href="css/print.css" rel="stylesheet" media="print">
 
     <script defer>
       (function(w,g){w['GoogleAnalyticsObject']=g;
@@ -33,6 +24,8 @@
     </script>
     <script async src="http://www.google-analytics.com/analytics.js"></script>
     <script async src="js/perfmatters.js"></script>
+    <script async src="js/loadCSS.js"></script>
+    <script async src="js/cssrelpreload.js"></script>
   </head>
 
   <body>
