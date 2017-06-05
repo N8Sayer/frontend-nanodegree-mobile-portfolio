@@ -32,7 +32,7 @@ Profile, optimize, measure... and then lather, rinse, and repeat. Good luck!
 
 #### Part 2: Optimize Frames per Second in pizza.html
 
-To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js. 
+To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js.
 
 You might find the FPS Counter/HUD Display useful in Chrome developer tools described here: [Chrome Dev Tools tips-and-tricks](https://developer.chrome.com/devtools/docs/tips-and-tricks).
 
@@ -47,6 +47,57 @@ You might find the FPS Counter/HUD Display useful in Chrome developer tools desc
 * <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer.html">Reduce the size of text</a>
 * <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/image-optimization.html">Optimize images</a>
 * <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching.html">HTTP caching</a>
+
+#### Optimizations I did:
+* Made all the JS scripts async
+* Optimized all images and specified width and height
+* Forced CSS to load later by putting it at the bottom of the body
+* Deprecated determineDx and sizeSwitcher in favor of putting all computations in changePizzaSizes()
+* Put ``` var pizzasDiv = document.getElementById("randomPizzas"); ``` before the ``` for ``` loop
+* Made the rows of pizzas load dynamically based on page height.
+* Changed     
+         function updatePositions() {
+            frame++;
+            window.performance.mark("mark_start_frame");
+
+            var items = document.querySelectorAll('.mover');
+            for (var i = 0; i < items.length; i++) {
+              var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+              items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+            }
+
+            // User Timing API to the rescue again. Seriously, it's worth learning.
+            // Super easy to create custom metrics.
+            window.performance.mark("mark_end_frame");
+            window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+            if (frame % 10 === 0) {
+              var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+              logAverageFrame(timesToUpdatePosition);
+          }
+        }  
+into
+        var items;
+        function updatePositions() {
+          items = document.getElementsByClassName('mover');
+          frame++;
+          window.performance.mark("mark_start_frame");
+
+          var scrollTop = (document.body.scrollTop / 1250);
+
+          for (var i = 0; i < items.length; i++) {
+            var phase = Math.sin(scrollTop + (i % 5));
+            items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+          }
+
+          // User Timing API to the rescue again. Seriously, it's worth learning.
+          // Super easy to create custom metrics.
+          window.performance.mark("mark_end_frame");
+          window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+          if (frame % 10 === 0) {
+            var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+            logAverageFrame(timesToUpdatePosition);
+          }
+        }
 
 ### Customization with Bootstrap
 The portfolio was built on Twitter's <a href="http://getbootstrap.com/">Bootstrap</a> framework. All custom styles are in `dist/css/portfolio.css` in the portfolio repo.
